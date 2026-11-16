@@ -3,6 +3,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+//Iterator Pattern
+
 public class searchMessagesByUser implements Iterator<Message> {
     private final List<Message> messages;
     private final User userToSearchWith;

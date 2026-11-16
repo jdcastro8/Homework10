@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+//Mediator Pattern
+
 public class ChatServer {
     private final Set<User> users = new HashSet<>();
     private final Map<User, Set<User>> blockedUsers = new HashMap<>();

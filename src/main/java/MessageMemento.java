@@ -1,6 +1,8 @@
 
 import java.time.LocalDateTime;
 
+//Memento Pattern
+
 public final class MessageMemento {
     private final String content;
     private final LocalDateTime timestamp;
