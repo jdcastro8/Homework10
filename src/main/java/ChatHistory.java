@@ -4,9 +4,17 @@ import java.util.List;
 
 public class ChatHistory {
     private final List<Message> messages = new ArrayList<>();
+    private final List<Message> sentMessages = new ArrayList<>();
+    private final List<MessageMemento> sentSnapshots = new ArrayList<>();
 
     public void addMessage(Message message) {
         messages.add(message);
+    }
+
+    public void addSentMessage(Message message) {
+        messages.add(message);
+        sentMessages.add(message);
+        sentSnapshots.add(message.save());
     }
 
     public Message getLastMessage() {
@@ -14,6 +22,34 @@ public class ChatHistory {
             return null;
         }
         return messages.get(messages.size() - 1);
+    }
+
+    public Message getLastSentMessage() {
+        if (sentMessages.isEmpty()) {
+            return null;
+        }
+        return sentMessages.get(sentMessages.size() - 1);
+    }
+
+    public Message undoLastSentMessage() {
+        if (sentMessages.isEmpty()) {
+            return null;
+        }
+
+        int last = sentMessages.size() - 1;
+
+        Message original = sentMessages.remove(last);
+        MessageMemento snapshot = sentSnapshots.remove(last);
+
+        Message restored = original.restore(snapshot);
+
+        if (!restored.getContent().equals(original.getContent())
+                || !restored.getTimestamp().equals(original.getTimestamp())) {
+            throw new IllegalStateException("Memento restoration failed");
+        }
+
+        messages.remove(original);
+        return original;
     }
 
     public List<Message> getMessages() {

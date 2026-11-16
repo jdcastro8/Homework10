@@ -21,6 +21,15 @@ public class Message {
         this.timestamp = timestamp;
     }
 
+    public MessageMemento save() {
+        return new MessageMemento(content, timestamp);
+    }
+
+    public Message restore(MessageMemento memento) {
+        return new Message(sender, recipients,
+                memento.getContent(), memento.getTimestamp());
+    }
+
     public User getSender() {
         return sender;
     }

@@ -1,5 +1,9 @@
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class ChatServer {
     private final Set<User> users = new HashSet<>();
@@ -12,6 +16,7 @@ public class ChatServer {
     public void unregisterUser(User user) {
         users.remove(user);
         blockedUsers.remove(user);
+
         for (Set<User> blocked : blockedUsers.values()) {
             blocked.remove(user);
         }
@@ -21,6 +26,7 @@ public class ChatServer {
         if (!users.contains(blocker) || !users.contains(blocked)) {
             return;
         }
+
         blockedUsers.computeIfAbsent(
                 blocker, k -> new HashSet<>()).add(blocked);
     }
@@ -47,6 +53,16 @@ public class ChatServer {
             }
 
             recipient.receiveMessage(message);
+        }
+    }
+
+    public void undoMessage(User sender, Message message) {
+        if (!users.contains(sender) || message.getSender() != sender) {
+            return;
+        }
+
+        for (User recipient : message.getRecipients()) {
+            recipient.removeReceivedMessage(message);
         }
     }
 

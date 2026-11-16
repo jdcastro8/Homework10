@@ -18,12 +18,24 @@ public class User {
 
     public void sendMessage(List<User> recipients, String content) {
         Message message = new Message(this, recipients, content);
-        history.addMessage(message);
+        history.addSentMessage(message);
         server.sendMessage(message);
     }
 
     public void receiveMessage(Message message) {
         history.addMessage(message);
+    }
+
+    public void undoLastMessage() {
+        Message message = history.undoLastSentMessage();
+
+        if (message != null) {
+            server.undoMessage(this, message);
+        }
+    }
+
+    void removeReceivedMessage(Message message) {
+        history.removeMessage(message);
     }
 
     public void blockUser(User user) {
